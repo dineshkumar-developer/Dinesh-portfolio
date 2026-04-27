@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="description"
+    content="Technical overview of the Dinesh Kumar S portfolio site — architecture, GSAP animation scenes, aurora background engine, CSS design tokens, and GitHub Pages deployment."
+  >
+  <meta name="theme-color" content="#f4f7fb">
+  <meta name="robots" content="index,follow">
+  <title>Technical Overview | Dinesh Kumar S Portfolio</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/icons/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="./assets/icons/favicon.ico">
+  <link href="./assets/vendor/fonts/adlam-display.css?v=20260425-localvendor" rel="stylesheet">
+  <script>
+    (function () {
+      var key = 'portfolio-theme';
+      var themes = {
+        aurora: { href: './css/themes/aurora.css?v=20260425-contactalign', color: '#f4f7fb' },
+        space: { href: './css/themes/space.css?v=20260425-contactalign', color: '#0a0e1a' }
+      };
+      var theme = 'aurora';
+      var themeStylesheet;
+      try {
+        theme = localStorage.getItem(key) || theme;
+      } catch (error) {}
+      if (!themes[theme]) theme = 'aurora';
+      window.__PORTFOLIO_THEME__ = theme;
+      document.documentElement.classList.add('js');
+      document.documentElement.dataset.portfolioTheme = theme;
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', themes[theme].color);
+      themeStylesheet = document.createElement('link');
+      themeStylesheet.id = 'themeStylesheet';
+      themeStylesheet.rel = 'stylesheet';
+      themeStylesheet.href = themes[theme].href;
+      document.head.appendChild(themeStylesheet);
+    })();
+  </script>
+  <noscript><link rel="stylesheet" href="./css/themes/aurora.css?v=20260425-contactalign"></noscript>
+  <style>
+    .about-page main {
+      padding-top: clamp(5rem, 10vw, 7rem);
+    }
+
+    .about-title {
+      margin: 0 0 1rem;
+      font-family: var(--font-display);
+      font-size: clamp(2.6rem, 6vw, 5rem);
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+      color: var(--color-ink);
+    }
+
+    .about-page .section-heading {
+      max-width: 900px;
+    }
+
+    .about-page .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .about-grid > .panel {
+      min-height: 100%;
+    }
+
+    .about-page .section-heading h2,
+    .about-page .section-heading p,
+    .about-page .bullet-list li,
+    .about-page .chip-cloud span,
+    .about-page .tag-row span,
+    .about-page .key-value-item,
+    .about-page .skill-bar {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: none !important;
+    }
+
+    .about-page .panel h2,
+    .about-page .panel h3 {
+      margin: 0.25rem 0 0.9rem;
+      font-family: var(--font-display);
+      font-size: clamp(1.35rem, 3vw, 1.9rem);
+      line-height: 1.08;
+      color: var(--color-ink);
+    }
+
+    .about-page code {
+      font-family: var(--font-mono);
+      color: var(--color-coral-deep);
+      font-size: 0.95em;
+      padding: 0.05em 0.35em;
+      background: rgba(37, 99, 235, 0.08);
+      border-radius: 6px;
+    }
+
+    .about-page .section + .section {
+      padding-top: clamp(3rem, 6vw, 4.5rem);
+    }
+
+    @media (max-width: 980px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .about-page .header-actions {
+        width: 100%;
+      }
+
+      .about-title {
+        font-size: clamp(2.2rem, 10vw, 3.4rem);
+      }
+    }
+  </style>
+</head>
+<body class="about-page">
+  <script>
+    document.body.classList.add(window.__PORTFOLIO_THEME__ === 'space' ? 'theme-space' : 'theme-aurora');
+  </script>
+  <div class="scene-shell" aria-hidden="true">
+    <div class="aurora-blob aurora-blob--a"></div>
+    <div class="aurora-blob aurora-blob--b"></div>
+    <div class="aurora-blob aurora-blob--c"></div>
+    <div class="aurora-blob aurora-blob--d"></div>
+    <div class="aurora-blob aurora-blob--e"></div>
+    <div class="dot-grid" aria-hidden="true"></div>
+    <div class="scan-line" aria-hidden="true"></div>
+    <canvas class="particles-canvas" id="particlesCanvas" aria-hidden="true"></canvas>
+    <div class="scene-vignette"></div>
+    <div class="scene-grid"></div>
+    <div class="scene-scanlines"></div>
+    <canvas class="scene-canvas" id="sceneCanvas" hidden></canvas>
+  </div>
+  <div class="grain-overlay" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="./index.html" aria-label="Back to portfolio home">
+        <span class="brand__kicker">Technical Documentation</span>
+        <span class="brand__name">Portfolio Architecture</span>
+      </a>
+
+      <div class="header-actions">
+        <button class="theme-switch" type="button" data-theme-switch>
+          <span class="theme-switch__icon" aria-hidden="true">
+            <span class="theme-switch__dot"></span>
+          </span>
+          <span class="theme-switch__label">Theme</span>
+          <span class="theme-switch__text">
+            <span data-theme-current>Aurora</span>
+            <span class="theme-switch__divider" aria-hidden="true">/</span>
+            <span data-theme-next>Space</span>
+          </span>
+        </button>
+        <a class="btn btn--secondary" href="./index.html">Back to Portfolio</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Technical Overview</p>
+          <h1 class="about-title">How This Portfolio Is Built</h1>
+          <p>
+            This page documents the current merged portfolio: one shared content structure, two selectable themes, theme-specific CSS, theme-specific runtime controllers, responsive navigation, and the cleanup choices that keep the site maintainable after combining the original projects.
+          </p>
+        </div>
+
+        <div class="about-grid">
+          <article class="panel">
+            <p class="card-label">Project Model</p>
+            <h2>Static Site With No Build Step</h2>
+            <p>
+              The portfolio is built as a static site using plain HTML, CSS, and JavaScript ES modules. That makes it easy to host on GitHub Pages because the repository can be served directly without bundling, compilation, or a framework-specific deployment pipeline.
+            </p>
+            <div class="chip-cloud">
+              <span>HTML</span>
+              <span>CSS</span>
+              <span>JavaScript</span>
+              <span>ES Modules</span>
+              <span>GSAP</span>
+              <span>Canvas 2D</span>
+              <span>Three.js</span>
+              <span>Dual Themes</span>
+              <span>GitHub Pages</span>
+            </div>
+          </article>
+
+          <article class="panel">
+            <p class="card-label">Why This Stack</p>
+            <h2>Chosen for Speed, Portability, and Maintenance</h2>
+            <ul class="bullet-list">
+              <li>No framework means the site stays lightweight and publishes as static files.</li>
+              <li>ES modules keep the code organized without requiring a bundler.</li>
+              <li>Theme styles are split into <code>aurora.css</code> and <code>space.css</code>, so each visual system can evolve without duplicating page content.</li>
+              <li>GSAP, ScrollTrigger, and Three.js are served from local files under <code>assets/vendor/</code>, so the deployed site is not dependent on runtime CDN access.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="runtime">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Runtime Flow</p>
+          <h2>Boot Sequence and Main Script Responsibilities</h2>
+          <p>
+            The site uses a controller-based startup flow so each major system can initialize and clean itself up independently.
+          </p>
+        </div>
+
+        <div class="about-grid">
+          <article class="panel">
+            <p class="card-label">Entry Script</p>
+            <h3><code>js/script.js</code></h3>
+            <ul class="bullet-list">
+              <li>Acts as the browser entry point and keeps startup intentionally thin: import controllers, build them, store them, and destroy them in reverse order.</li>
+              <li>Waits up to <code>1.2s</code> for the deferred local GSAP script to populate <code>window.gsap</code> before booting, so scene setup can register GSAP plugins exactly once.</li>
+              <li>Boots focused controllers for the active theme: Aurora loads CSS blobs, Canvas particles, GSAP scenes, and ambient UI; Space loads the Three.js background and Space-specific UI helpers.</li>
+              <li>Registers <code>pagehide</code> and <code>beforeunload</code> handlers that tear every controller down in reverse order for clean navigations.</li>
+            </ul>
+          </article>
+
+          <article class="panel">
+            <p class="card-label">Safety Net</p>
+            <h3>Content Never Gets Stuck Hidden</h3>
+            <ul class="bullet-list">
+              <li>An inline script in <code>&lt;head&gt;</code> adds a <code>.js</code> class to <code>&lt;html&gt;</code> immediately so GSAP-ready pre-hide rules can apply before first paint.</li>
+              <li>The same inline script sets a 1.8s fallback timer: if <code>window.gsap</code> never arrives, it toggles a <code>.no-gsap</code> class that forces every pre-hidden element back to visible.</li>
+              <li>This means a missing or blocked animation script can never leave the page as empty white cards.</li>
+            </ul>
+          </article>
+
+          <article class="panel">
+            <p class="card-label">Shared Helpers</p>
+            <h3>Utility and Lifecycle Modules</h3>
+            <ul class="bullet-list">
+              <li><code>js/modules/lifecycle.js</code> exports <code>createDisposer()</code>, which tracks listeners, delegated events, timeouts, intervals, and animation frames. Controllers use the same cleanup contract to avoid leaks.</li>
+              <li><code>js/modules/utils.js</code> contains <code>toArray</code>, <code>clamp</code>, <code>wrapAngle</code>, <code>lerpAngle</code>, <code>prefersReducedMotion</code>, <code>rafThrottle</code>, and <code>escapeHtml</code>.</li>
+              <li>Keeping these helpers in one place reduces repetition inside UI and rendering modules and makes behavior modules easier to read.</li>
+            </ul>
+          </article>
+
+          <article class="panel">
+            <p class="card-label">Controller Contract</p>
+            <h3>Uniform Boot + Destroy Shape</h3>
+            <ul class="bullet-list">
+              <li>Every controller is a factory that returns <code>{ destroy }</code>.</li>
+              <li>Controllers own their own disposer instance and never leak listeners across page lifetimes.</li>
+              <li>Tear-down order is reverse of construction so layered effects unwind cleanly during navigation or page unload.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="ui-scripts">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Interface Scripts</p>
+          <h2>How the UI Layer Works</h2>
+          <p>
+            The interface logic is split into focused modules so motion, navigation, and decorative effects stay readable and maintainable.
+          </p>
+        </div>
+
+        <div class="about-grid">
+          <article class="panel">
+            <p class="card-label">Ambient Controller</p>
+            <h3><code>js/modules/ambient.js</code></h3>
+            <ul class="bullet-list">
+              <li>Handles mobile navigation open and close state, active-section highlighting via <code>IntersectionObserver</code>, and URL-aware menu close behavior.</li>
+              <li>Drives the rotating hero signal phrase, animated with a GSAP fade-swap when GSAP is available.</li>
+              <li>Runs the hero mouse-follow glow, panel 3D tilt with pointer light, and magnetic motion on primary + secondary buttons — all smoothed via <code>gsap.quickTo</code> for frame-perfect tracking.</li>
+              <li>Updates a <code>--scroll-progress</code> custom property that drives the top-edge gradient progress bar.</li>
+              <li>Improves contact actions by attempting Clipboard API copy first, with a toast confirmation, and falling back to the original <code>tel:</code> / <code>mailto:</code> behavior if copying fails.</li>
+            </ul>
+          </article>
+
+          <article class="panel">
+            <p class="card-label">GSAP Scene Director</p>
+            <h3><code>js/modules/gsapScenes.js</code></h3>
+            <ul class="bullet-list">
+              <li>Registers <code>ScrollTrigger</code> once, then orchestrates every scroll-driven and load-driven animation on the page.</li>
+              <li>Splits the hero <code>h1</code> into per-character spans, flags the final two words with a gradient class, and plays a staggered rise on load.</li>
+              <li>Builds a hero intro timeline that cascades header, eyebrow, chips, subtitle, signal, body, buttons, and hero summary into place.</li>
+              <li>Creates ScrollTriggers for generic <code>.reveal</code> elements, section headings (with an underline draw hook), bullet lists, chips, key-values, metric cards, and skill-bar rows.</li>
+              <li>Scrubs the Experience timeline fill and each skill-bar fill directly off scroll position, so progress reads as continuous feedback instead of play-once motion.</li>
+              <li>Tweens metric numbers from 0 to their <code>data-count</code> target once on enter, with a <code>once: true</code> flag to keep later scrolls cheap.</li>
+              <li>Applies parallax to the hero content + panel and a slower drift on the dot-grid layer.</li>
+              <li>Runs continuous idle loops — hero chip float, summary card bob, hero glow pulse, aurora blob breath, and periodic scan-line sweep — using <code>sine.inOut</code> yoyo tweens.</li>
+            </ul>
+          </article>
+
+          <article class="panel">
+            <p class="card-label">Theme UI Helpers</p>
+            <h3><code>futuristicUI*.js</code></h3>
+            <ul class="bullet-list">
+              <li>Aurora keeps this layer intentionally small because most intro, reveal, and metric motion is handled by <code>gsapScenes.js</code>.</li>
+              <li>Space adds scanline card accents, count-up support, skill-bar progress, and heading glitch polish when reduced motion is not requested.</li>
+              <li>The older visible HUD and visitor counter have been removed from the page, so these modules no longer create those footer or top-bar displays.</li>
+            </ul>
+          </article>
+
+          <article class="panel">
+            <p class="card-label">Why Split the UI</p>
+            <h3>Maintainability Through Boundaries</h3>
+            <ul class="bullet-list">
+              <li><code>ambient.js</code> handles nav, pointer glue, and content interactions.</li>
+              <li><code>gsapScenes.js</code> owns all scroll, intro, and idle animation.</li>
+              <li><code>futuristicUI*.js</code> handles theme-specific UI polish that is not part of the main layout.</li>
+              <li>Each module has a single responsibility and can be edited without reaching into the others.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="background-engine">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Background Engine</p>
+          <h2>Aurora and Space Background Systems</h2>
+          <p>
+            The merged site keeps both original visual directions. Aurora uses lightweight CSS layers and Canvas particles, while Space uses a Three.js scene with quality scaling and a static fallback for weak or blocked WebGL environments.
+          </p>
+        </div>
+
+        <div class="about-grid">
+          <article class="panel">
+            <p class="card-label">Aurora Controller</p>
+            <h3><code>js/background/auroraBackground.js</code></h3>
+            <ul class="bullet-list">
+              <li>Drives five <code>.aurora-blob</code> divs by writing <code>--tx</code> and <code>--ty</code> custom properties each <code>requestAnimationFrame</code> tick.</li>
+              <li>Each blob has its own Lissajous-style drift curve (phase offset, range, and speed) so the scene never visibly repeats.</li>
+              <li>Three of the blobs subtly weight toward the pointer, which makes the composition feel alive without any visual parallax jump.</li>
+              <li>Pauses cleanly on <code>visibilitychange</code> and falls back to a static frame under <code>prefers-reduced-motion</code>.</li>
+              <li>Shares the element transform with GSAP's idle breath tween (which animates a separate <code>--scl</code> property) so both systems coexist without fighting.</li>
+            </ul>
+          </article>
+
+          <article class="panel">
+            <p class="card-label">Particle Field</p>
+            <h3><code>js/modules/particles.js</code></h3>
+            <ul class="bullet-list">
+              <li>Renders 24 to 72 tiny shapes (dots, dashes, squares) drifting slowly upward on a fixed Canvas 2D context, tinted with the brand palette — blue, cyan, violet, lime, and amber.</li>
+              <li>Particle count scales with viewport area; opacity and density both soften on mobile.</li>
+              <li>Each particle has its own life cycle, rotation, and velocity, so the field looks organic without a noise texture.</li>
+              <li>Respects DPR up to <code>2x</code> for crispness without over-drawing on high-density screens.</li>
+              <li>Honors <code>prefers-reduced-motion</code> by skipping the animation loop entirely.</li>
+            </ul>
+          </article>
+
+          <article class="panel">
+            <p class="card-label">Decorative Layers</p>
+            <h3>Dot Grid, Scan Line, Grain, Rings</h3>
+            <ul class="bullet-list">
+              <li><code>.dot-grid</code> is a single masked <code>background-image</code> of radial dots, with a light parallax tween tied to page scroll.</li>
+              <li><code>.scan-line</code> is a thin gradient band that GSAP sweeps down the viewport every few seconds as a soft technical signal.</li>
+              <li><code>.grain-overlay</code> is an inline SVG <code>feTurbulence</code> noise tile blended at ~5% opacity for subtle texture at any resolution.</li>
+              <li>The hero pairs a rotating conic-gradient ring with a counter-rotating dashed ring as the hero's signature visual anchor.</li>
+            </ul>
+          </article>
+
+          <article class="panel">
+            <p class="card-label">Space Controller</p>
+            <h3><code>js/background/spaceBackground.js</code></h3>
+            <ul class="bullet-list">
+              <li>Loads Three.js only for the Space theme, then creates the scene from <code>spaceScene.js</code> so Aurora users do not pay for the WebGL runtime.</li>
+              <li>Scales quality by viewport, pointer type, DPR, and reduced-motion preference to keep mobile and desktop performance balanced.</li>
+              <li>Stops animation when the tab is hidden, rebuilds safely on resize and motion-preference changes, and falls back gracefully when WebGL is unavailable.</li>
+              <li>Art direction stays theme-local: Space CSS owns the dark layout and overlay styling, while the scene controller owns planets, starfield, ships, warp effects, and lighting.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="css-system">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Styling System</p>
+          <h2>How the CSS Is Structured</h2>
+          <p>
+            The merged site uses separate theme stylesheets for Aurora and Space, with shared markup and JavaScript selecting the active visual system at startup.
+          </p>
+        </div>
+
+        <div class="about-grid">
+          <article class="panel">
+            <p class="card-label">Design Tokens</p>
+            <h3><code>css/themes/*.css</code></h3>
+            <ul class="bullet-list">
+              <li>Each theme file defines its own tokens in <code>:root</code>: surfaces, ink, accent colors, gradients, glass surfaces, shadows, radii, typography, and motion easings.</li>
+              <li>Theme-specific gradient tokens centralize each palette so one edit flows through the hero headline, the CTA button, section underlines, scroll progress, and metric numbers.</li>
+              <li>Motion timings use a cubic-bezier <code>power3.out</code>-style curve for the default easing, which matches the GSAP defaults in the JavaScript layer.</li>
+            </ul>
+          </article>
+
+          <article class="panel">
+            <p class="card-label">Section Identity</p>
+            <h3>Per-Section Accent + Counters</h3>
+            <ul class="bullet-list">
+              <li>Each section ID (<code>#capabilities</code>, <code>#experience</code>, <code>#projects</code>, <code>#skills</code>, <code>#education</code>, <code>#contact</code>) overrides <code>--section-accent</code> and <code>--section-gradient</code> for its subtree.</li>
+              <li>Eyebrow color, bullet dot gradient, heading underline gradient, and the colored contact-card icon all read those variables, so the whole section adopts its identity without extra markup.</li>
+              <li>A CSS counter on <code>main</code> increments a <code>numbered-section</code> counter for each <code>.section-heading</code>, rendered as a large translucent gradient "01" / "02" / "03" &hellip; "06" badge above each eyebrow.</li>
+            </ul>
+          </article>
+
+          <article class="panel">
+            <p class="card-label">Panels and Glass</p>
+            <h3>Frosted Surfaces with Signature Detailing</h3>
+            <ul class="bullet-list">
+              <li>Every <code>.panel</code> layers four thin gradient strokes (top-left coral and bottom-right violet corner brackets) over a warm-plus-cool tint wash over a translucent glass surface — drawn entirely with <code>linear-gradient</code>, no assets.</li>
+              <li>A gradient border is painted by a <code>::before</code> mask trick so the border color can animate without repainting the glass behind it.</li>
+              <li>Pointer position and tilt angles are pushed in as custom properties from <code>ambient.js</code>, which keeps all 3D motion transform-only and GPU-accelerated.</li>
+              <li>A <code>@supports not (backdrop-filter)</code> block upgrades every glass surface to a stronger solid rgba so older browsers never see dim empty rectangles.</li>
+            </ul>
+          </article>
+
+          <article class="panel">
+            <p class="card-label">Reveals + Pre-Hide</p>
+            <h3>GSAP-Ready Entry States</h3>
+            <ul class="bullet-list">
+              <li><code>html.js</code>-scoped rules pre-hide <code>.reveal</code> elements, hero content children, panels, section headings, chips, bullets, key-values, and skill bars so GSAP can animate them in without a flash-of-content.</li>
+              <li>A fallback rule keyed on <code>html.no-gsap</code> restores visibility if GSAP never loads.</li>
+              <li>The <code>prefers-reduced-motion</code> media query forces every pre-hidden element to its final state with <code>!important</code>, so those users always see content immediately and never see the intro cascade.</li>
+            </ul>
+          </article>
+
+          <article class="panel">
+            <p class="card-label">Motion and Responsiveness</p>
+            <h3>Animation, Breakpoints, and Accessibility</h3>
+            <ul class="bullet-list">
+              <li>Media queries at 1080 / 860 / 640 px collapse grids, swap the hero to a single column, and keep the fixed header plus mobile menu inside the viewport in portrait and landscape.</li>
+              <li>Hover-specific rules are scoped under <code>@media (hover: hover) and (pointer: fine)</code>, so touch devices never get desktop-only effects.</li>
+              <li>Reduced-motion blocks disable idle loops, scroll-driven animations, particles, and scan line effects.</li>
+            </ul>
+          </article>
+
+          <article class="panel">
+            <p class="card-label">Why Split Theme Files</p>
+            <h3>High Control Without a Build Tool</h3>
+            <ul class="bullet-list">
+              <li>A plain CSS approach keeps the site GitHub-Pages-native — no Sass, PostCSS, or framework compilation step.</li>
+              <li>Custom properties provide enough flexibility for theming, section identity, and runtime tuning without a preprocessor.</li>
+              <li>Keeping Aurora and Space in separate files avoids a single oversized stylesheet and makes theme-specific fixes safer.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="tools">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Libraries and APIs</p>
+          <h2>What External Tools Are Used and Why</h2>
+          <p>
+            The project keeps outside dependencies small. Each external tool solves a clear problem.
+          </p>
+        </div>
+
+        <div class="about-grid">
+          <article class="panel">
+            <p class="card-label">Libraries</p>
+            <h3>External Dependencies</h3>
+            <ul class="bullet-list">
+              <li><code>GSAP 3.12.5</code> and <code>ScrollTrigger</code> are served from <code>assets/vendor/gsap/</code> with <code>defer</code>, then consumed by <code>gsapScenes.js</code>. GSAP is used because it covers intro timelines, scrub-linked scroll animation, idle yoyo loops, and quickTo-smoothed pointer tracking with one coherent API.</li>
+              <li><code>Three.js 0.160.1</code> is dynamically imported only by the Space background controller from <code>assets/vendor/three/</code>, with a static fallback when WebGL cannot initialize.</li>
+              <li><code>ADLaM Display</code> is served locally from <code>assets/vendor/fonts/</code> and provides the display typeface used across every heading, paragraph, and label. The unified font is a deliberate choice to keep the site visually coherent.</li>
+            </ul>
+          </article>
+
+          <article class="panel">
+            <p class="card-label">Browser APIs</p>
+            <h3>Native Web Features</h3>
+            <ul class="bullet-list">
+              <li><code>IntersectionObserver</code> — used by ambient.js for active-nav tracking and by the GSAP fallback path for reveal detection when GSAP is absent.</li>
+              <li><code>requestAnimationFrame</code> and a small <code>rafThrottle</code> helper — keep aurora drift, particle stepping, and scroll-progress updates aligned with the browser's render loop.</li>
+              <li><code>matchMedia</code> — detects <code>prefers-reduced-motion</code> and hover / fine-pointer capability so interactions adapt per device.</li>
+              <li><code>Clipboard API</code> — powers the one-tap contact copy with toast confirmation.</li>
+              <li><code>Canvas 2D</code> — drives the Aurora particle field on a single fixed canvas.</li>
+              <li><code>WebGL</code> — powers the Space background when supported, while fallback CSS keeps the page readable without it.</li>
+              <li><code>CSS custom properties</code>, <code>backdrop-filter</code>, <code>CSS counters</code>, and <code>conic-gradient</code> carry theme colors, responsive polish, and section identity.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="deployment">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Deployment</p>
+          <h2>Why It Works Well on GitHub Pages</h2>
+          <p>
+            The project is structured so it can be uploaded as static files with minimal risk.
+          </p>
+        </div>
+
+        <div class="about-grid">
+          <article class="panel">
+            <p class="card-label">Hosting Notes</p>
+            <h3>GitHub-Friendly Decisions</h3>
+            <ul class="bullet-list">
+              <li>All local HTML, CSS, JavaScript, and asset paths are relative, so the site works from a repository subpath as well as a root domain.</li>
+              <li>The project includes <code>.nojekyll</code>, which prevents GitHub Pages from running Jekyll rules that can interfere with static asset handling.</li>
+              <li>The site needs no bundler, no server-side rendering, and no Node runtime — push and publish.</li>
+            </ul>
+          </article>
+
+          <article class="panel">
+            <p class="card-label">Operational Tradeoffs</p>
+            <h3>What Is Still Loaded Externally</h3>
+            <ul class="bullet-list">
+              <li>The font is served from <code>assets/vendor/fonts/</code>.</li>
+              <li>GSAP core and ScrollTrigger are served from <code>assets/vendor/gsap/</code>.</li>
+              <li>Three.js is served from <code>assets/vendor/three/</code> and loaded only for the Space theme.</li>
+              <li>These choices keep the repository simple, while the inline no-GSAP safety net and WebGL fallback keep the page usable if an animation or rendering dependency cannot initialize.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <div class="site-footer__meta">
+        <p>Technical Overview</p>
+        <div class="footer-status" aria-hidden="true">
+          <span class="footer-status__dot"></span>
+          <span>Documentation Page</span>
+        </div>
+      </div>
+      <p class="site-footer__summary">Merged static portfolio — Aurora and Space themes, GSAP animation, Canvas particles, optional Three.js Space scene, GitHub Pages deploy.</p>
+    </div>
+  </footer>
+  <script src="./assets/vendor/gsap/gsap.min.js?v=3.12.5" defer></script>
+  <script src="./assets/vendor/gsap/ScrollTrigger.min.js?v=3.12.5" defer></script>
+  <script type="module" src="./js/script.js?v=20260425-systemcursor"></script>
+</body>
+</html>

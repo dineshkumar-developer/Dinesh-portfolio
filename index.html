@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="description"
+    content="Dinesh Kumar S - Game Developer, Frontend Developer, and Web Application Developer with experience in PixiJS casino games, responsive web applications, UI systems, and AI-assisted development."
+  >
+  <meta name="theme-color" content="#fdfcfa">
+  <meta name="robots" content="index,follow">
+  <title>Dinesh Kumar S | Game Developer & Frontend Application Developer</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/icons/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="./assets/icons/favicon.ico">
+  <link href="./assets/vendor/fonts/adlam-display.css?v=20260425-localvendor" rel="stylesheet">
+  <script>
+    (function () {
+      var key = 'portfolio-theme';
+      var themes = {
+        aurora: { href: './css/themes/aurora.css?v=20260425-contactalign', color: '#fdfcfa' },
+        space: { href: './css/themes/space.css?v=20260425-contactalign', color: '#0a0e1a' }
+      };
+      var theme = 'aurora';
+      var themeStylesheet;
+      try {
+        theme = localStorage.getItem(key) || theme;
+      } catch (error) {}
+      if (!themes[theme]) theme = 'aurora';
+      window.__PORTFOLIO_THEME__ = theme;
+      document.documentElement.classList.add('js');
+      document.documentElement.dataset.portfolioTheme = theme;
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', themes[theme].color);
+      themeStylesheet = document.createElement('link');
+      themeStylesheet.id = 'themeStylesheet';
+      themeStylesheet.rel = 'stylesheet';
+      themeStylesheet.href = themes[theme].href;
+      document.head.appendChild(themeStylesheet);
+      history.scrollRestoration = 'manual';
+      window.scrollTo(0, 0);
+      setTimeout(function () {
+        if (!window.gsap) document.documentElement.classList.add('no-gsap');
+      }, 1800);
+    })();
+  </script>
+  <noscript><link rel="stylesheet" href="./css/themes/aurora.css?v=20260425-contactalign"></noscript>
+</head>
+<body>
+  <script>
+    document.body.classList.add(window.__PORTFOLIO_THEME__ === 'space' ? 'theme-space' : 'theme-aurora');
+  </script>
+  <noscript>
+    <div class="noscript-banner">
+      This website uses JavaScript for navigation states and content reveals. Enable JavaScript for the full experience.
+    </div>
+  </noscript>
+
+  <div class="scene-shell" aria-hidden="true">
+    <div class="aurora-blob aurora-blob--a"></div>
+    <div class="aurora-blob aurora-blob--b"></div>
+    <div class="aurora-blob aurora-blob--c"></div>
+    <div class="aurora-blob aurora-blob--d"></div>
+    <div class="aurora-blob aurora-blob--e"></div>
+    <div class="dot-grid" aria-hidden="true"></div>
+    <div class="scan-line" aria-hidden="true"></div>
+    <canvas class="particles-canvas" id="particlesCanvas" aria-hidden="true"></canvas>
+    <div class="scene-vignette"></div>
+    <div class="scene-grid"></div>
+    <div class="scene-scanlines"></div>
+    <canvas class="scene-canvas" id="sceneCanvas" hidden></canvas>
+  </div>
+  <div class="grain-overlay" aria-hidden="true"></div>
+
+  <!-- Damage flash overlay -->
+  <div id="damage-flash" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="#home" aria-label="Go to home">
+        <span class="brand__kicker">Portfolio For</span>
+        <span class="brand__name">Dinesh Kumar S</span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+      </button>
+
+      <button class="theme-switch" type="button" data-theme-switch>
+        <span class="theme-switch__icon" aria-hidden="true">
+          <span class="theme-switch__dot"></span>
+        </span>
+        <span class="theme-switch__label">Theme</span>
+        <span class="theme-switch__text">
+          <span data-theme-current>Aurora</span>
+          <span class="theme-switch__divider" aria-hidden="true">/</span>
+          <span data-theme-next>Space</span>
+        </span>
+      </button>
+
+      <nav class="site-nav" id="site-nav" aria-label="Primary">
+        <a href="#home">Home</a>
+        <a href="#capabilities">Capabilities</a>
+        <a href="#experience">Experience</a>
+        <a href="#projects">Project Scope</a>
+        <a href="#skills">Skills</a>
+        <a href="#education">Education</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero section" id="home">
+      <div class="container hero__grid">
+        <div class="hero__content reveal is-visible">
+          <p class="eyebrow">Game Developer | Frontend &amp; Application Developer | AI-Assisted Development</p>
+          <div class="hero__chips" aria-hidden="true">
+            <span>PixiJS</span>
+            <span>TypeScript</span>
+            <span>GSAP</span>
+            <span>Spine</span>
+          </div>
+          <h1>Dinesh Kumar S</h1>
+          <p class="hero__subtitle">
+            Building casino games, responsive web applications, internal tools, and UI systems with a strong focus on performance, usability, and maintainable frontend architecture.
+          </p>
+          <p class="hero__signal" aria-live="polite">
+            <span class="hero__signal-prefix">&gt;</span>
+            <span id="heroTypedText">pixijs casino games and web applications</span>
+            <span class="hero__signal-caret"></span>
+          </p>
+          <p class="hero__body">
+            Game Developer, Frontend Developer, and Web Application Developer with 2 years of experience in building high-performance casino games and scalable web applications. Specialized in PixiJS, GSAP, Spine animations, JavaScript, TypeScript, HTML5, CSS3, and responsive UI/UX across mobile, tablet, and desktop platforms.
+          </p>
+
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="#experience">View Experience</a>
+            <a class="btn btn--secondary" href="#skills">View Skills</a>
+            <a class="btn btn--secondary" href="#contact">Contact</a>
+          </div>
+        </div>
+
+        <aside class="hero__panel reveal">
+          <article class="panel hero__summary">
+            <p class="card-label">Current Role</p>
+            <h2>Game Developer / Frontend Developer / Application Developer</h2>
+            <div class="key-value-list">
+              <div class="key-value-item">
+                <span>Company</span>
+                <strong>Olive Multimedia</strong>
+              </div>
+              <div class="key-value-item">
+                <span>Timeline</span>
+                <strong>April 2024 – Present</strong>
+              </div>
+              <div class="key-value-item">
+                <span>Location</span>
+                <strong>Chennai, Tamil Nadu</strong>
+              </div>
+            </div>
+          </article>
+
+          <div class="metric-grid">
+            <article class="panel metric-card">
+              <span class="metric-card__label">Experience</span>
+              <strong data-count="2" data-suffix=" Years">2 Years</strong>
+              <p>Casino games, frontend systems, and web application work.</p>
+            </article>
+            <article class="panel metric-card">
+              <span class="metric-card__label">Internal Tools</span>
+              <strong data-count="4" data-suffix="+">4+</strong>
+              <p>Interactive tools and responsive web applications built for project needs.</p>
+            </article>
+            <article class="panel metric-card">
+              <span class="metric-card__label">UI Focus</span>
+              <strong>Cross-Device</strong>
+              <p>Responsive layouts and touch-friendly interfaces across portrait and landscape.</p>
+            </article>
+            <article class="panel metric-card">
+              <span class="metric-card__label">AI Workflow</span>
+              <strong>Daily</strong>
+              <p>ChatGPT, Claude, and OpenAI Codex used to speed development and improve code quality.</p>
+            </article>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="capabilities">
+      <div class="container">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Capabilities</p>
+          <h2>Core Areas Built Directly from Current Experience</h2>
+          <p>
+            Current work spans casino game systems, responsive web applications, internal tools, UI/UX improvement, and AI-assisted development workflows used to improve speed, quality, and maintainability.
+          </p>
+        </div>
+
+        <div class="capability-grid">
+          <article class="panel capability-card reveal">
+            <p class="card-label">Game Development</p>
+            <h3>Casino Games and Interactive Gameplay</h3>
+            <ul class="bullet-list">
+              <li>Developed casino slot games and interactive web-based games using PixiJS and modern JavaScript.</li>
+              <li>Implemented game logic, reward systems, scatter and wild symbols, free-spin triggers, and state-based functionality.</li>
+              <li>Managed animation flow across idle, spin, win, bonus, and transition states.</li>
+            </ul>
+          </article>
+
+          <article class="panel capability-card reveal">
+            <p class="card-label">Frontend Development</p>
+            <h3>Responsive Web Applications and Internal Tools</h3>
+            <ul class="bullet-list">
+              <li>Built responsive web applications and internal tools using HTML5, CSS3, Bootstrap, JavaScript, and TypeScript.</li>
+              <li>Designed modular frontend architectures and reusable UI components for maintainability.</li>
+              <li>Managed multi-page applications with clean navigation, structure, and cross-browser compatibility.</li>
+            </ul>
+          </article>
+
+          <article class="panel capability-card reveal">
+            <p class="card-label">UI / UX</p>
+            <h3>Clear Interfaces with Performance Awareness</h3>
+            <ul class="bullet-list">
+              <li>Designed intuitive and user-friendly interfaces for improved usability.</li>
+              <li>Optimized layout, navigation, and interaction flow to reduce user effort.</li>
+              <li>Focused on responsive design, portrait and landscape support, and performance-driven UI decisions.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="experience">
+      <div class="container">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Experience</p>
+          <h2>Current Role and Delivery Areas</h2>
+          <p>
+            One role is listed in the CV, but the scope is broad: game systems, frontend architecture, responsive UI, internal tools, and AI-assisted engineering support.
+          </p>
+        </div>
+
+        <div class="experience-layout">
+          <article class="panel role-card reveal">
+            <p class="card-label">Olive Multimedia</p>
+            <h3>Game Developer / Frontend Developer / Application Developer</h3>
+            <p class="role-card__meta">April 2024 – Present | Chennai, Tamil Nadu</p>
+            <p>
+              Working across casino game development, frontend web applications, UI/UX improvement, and AI-assisted development practices with a focus on scalable structure, responsive design, and smooth interactive behavior.
+            </p>
+            <div class="tag-row" aria-label="Role focus">
+              <span>PixiJS</span>
+              <span>TypeScript</span>
+              <span>Responsive UI</span>
+              <span>AI Tools</span>
+            </div>
+            <div class="role-timeline" aria-label="Employment duration">
+              <div class="role-timeline__bar">
+                <div class="role-timeline__fill"></div>
+              </div>
+              <div class="role-timeline__labels">
+                <span>Apr 2024</span>
+                <span class="role-timeline__now"><span class="hud-dot" aria-hidden="true"></span> Present</span>
+              </div>
+            </div>
+          </article>
+
+          <div class="experience-grid">
+            <article class="panel experience-card reveal">
+              <p class="card-label">Area 01</p>
+              <h3>Game Development</h3>
+              <ul class="bullet-list">
+                <li>Built casino slot games and interactive web-based games using PixiJS and modern JavaScript.</li>
+                <li>Integrated Spine animations for win, bonus, and idle states.</li>
+                <li>Built animation sequences and win effects using GSAP timelines and tweening.</li>
+                <li>Synchronized game logic with animation states and optimized assets using texture atlases.</li>
+              </ul>
+            </article>
+
+            <article class="panel experience-card reveal">
+              <p class="card-label">Area 02</p>
+              <h3>Frontend &amp; Web Applications</h3>
+              <ul class="bullet-list">
+                <li>Developed responsive web applications and internal tools using HTML5, CSS3, Bootstrap, JavaScript, and TypeScript.</li>
+                <li>Built 4+ internal tools with dynamic UI and interactive features.</li>
+                <li>Designed scalable frontend architectures and reusable UI components.</li>
+                <li>Ensured cross-device and cross-browser compatibility.</li>
+              </ul>
+            </article>
+
+            <article class="panel experience-card reveal">
+              <p class="card-label">Area 03</p>
+              <h3>UI / UX &amp; User Experience</h3>
+              <ul class="bullet-list">
+                <li>Designed intuitive interfaces with reduced user effort and clearer interaction flow.</li>
+                <li>Applied smooth animations and transitions to improve engagement.</li>
+                <li>Focused on responsive design with portrait and landscape support.</li>
+                <li>Improved usability through clean, interactive, and touch-friendly UI design.</li>
+              </ul>
+            </article>
+
+            <article class="panel experience-card reveal">
+              <p class="card-label">Area 04</p>
+              <h3>AI-Assisted Development</h3>
+              <ul class="bullet-list">
+                <li>Used Claude and ChatGPT daily for 2 years to improve development speed and code quality.</li>
+                <li>Used AI to optimize PixiJS rendering logic and frontend components.</li>
+                <li>Used AI for critical bug fixing, code reviews, OOP and TypeScript structure improvements, and advanced JavaScript learning.</li>
+                <li>Used OpenAI Codex, ChatGPT, and Claude to help generate config objects, event handlers, and animation sequence templates.</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="projects">
+      <div class="container">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Project Scope</p>
+          <h2>Project Scope and Delivery Areas</h2>
+          <p>
+            Work covers casino game development, internal tool creation, responsive web applications, reusable UI systems, and performance-focused frontend implementation.
+          </p>
+        </div>
+
+        <div class="scope-grid">
+          <article class="panel scope-card reveal">
+            <p class="card-label">Key Project Area</p>
+            <h3>Casino Slot &amp; Multi-Game Development</h3>
+            <ul class="bullet-list">
+              <li>Contributed to Slots, Roulette, Card Games, Scratch Cards, Plinko, and Video Poker.</li>
+              <li>Managed background, win, and bonus animation flows.</li>
+              <li>Integrated Spine animations with GSAP timeline control.</li>
+              <li>Created reusable modules for popups, settings, and game control systems.</li>
+              <li>Focused on UI/UX improvements and performance optimization.</li>
+            </ul>
+          </article>
+
+          <article class="panel scope-card reveal">
+            <p class="card-label">Key Project Area</p>
+            <h3>Responsive Web Applications &amp; Internal Tools</h3>
+            <ul class="bullet-list">
+              <li>Developed 4+ internal web applications with dynamic UI and interactive features.</li>
+              <li>Built custom web tools based on project and user requirements.</li>
+              <li>Implemented responsive layouts for cross-device compatibility.</li>
+              <li>Designed touch-friendly and adaptive UI components.</li>
+              <li>Improved workflow efficiency through user-friendly design.</li>
+            </ul>
+          </article>
+
+          <article class="panel scope-card reveal">
+            <p class="card-label">Engineering Focus</p>
+            <h3>Technical Delivery Priorities</h3>
+            <ul class="bullet-list">
+              <li>Game state management, scalable architecture, and performance optimization.</li>
+              <li>Reusable UI systems and maintainable frontend structure.</li>
+              <li>Smooth animation systems using PixiJS, GSAP, Spine, tweening, and timeline control.</li>
+              <li>AI-assisted workflows used to improve debugging speed, code structure, and implementation quality.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="skills">
+      <div class="container">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Technical Skills</p>
+          <h2>Skills &amp; Proficiency Levels</h2>
+          <p>
+            These skills reflect the technologies, concepts, and tooling explicitly supported by the CV and current work experience.
+          </p>
+        </div>
+
+        <div class="skills-grid">
+          <article class="panel skill-group reveal">
+            <p class="card-label">Languages</p>
+            <h3>Core Languages</h3>
+            <div class="skill-bars">
+              <div class="skill-bar" data-level="92">
+                <span class="skill-bar__label">JavaScript ES6+</span>
+                <div class="skill-bar__track"><div class="skill-bar__fill"></div></div>
+              </div>
+              <div class="skill-bar" data-level="80">
+                <span class="skill-bar__label">TypeScript</span>
+                <div class="skill-bar__track"><div class="skill-bar__fill"></div></div>
+              </div>
+              <div class="skill-bar" data-level="94">
+                <span class="skill-bar__label">HTML5</span>
+                <div class="skill-bar__track"><div class="skill-bar__fill"></div></div>
+              </div>
+              <div class="skill-bar" data-level="88">
+                <span class="skill-bar__label">CSS3</span>
+                <div class="skill-bar__track"><div class="skill-bar__fill"></div></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel skill-group reveal">
+            <p class="card-label">Frontend Development</p>
+            <h3>Web &amp; UI Systems</h3>
+            <div class="skill-bars">
+              <div class="skill-bar" data-level="82">
+                <span class="skill-bar__label">Bootstrap</span>
+                <div class="skill-bar__track"><div class="skill-bar__fill"></div></div>
+              </div>
+              <div class="skill-bar" data-level="90">
+                <span class="skill-bar__label">Responsive Design</span>
+                <div class="skill-bar__track"><div class="skill-bar__fill"></div></div>
+              </div>
+              <div class="skill-bar" data-level="86">
+                <span class="skill-bar__label">Cross-Device UI</span>
+                <div class="skill-bar__track"><div class="skill-bar__fill"></div></div>
+              </div>
+              <div class="skill-bar" data-level="84">
+                <span class="skill-bar__label">UI Development</span>
+                <div class="skill-bar__track"><div class="skill-bar__fill"></div></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel skill-group reveal">
+            <p class="card-label">Game Development &amp; Animation</p>
+            <h3>Gameplay &amp; Motion Systems</h3>
+            <div class="skill-bars">
+              <div class="skill-bar" data-level="88">
+                <span class="skill-bar__label">PixiJS</span>
+                <div class="skill-bar__track"><div class="skill-bar__fill"></div></div>
+              </div>
+              <div class="skill-bar" data-level="82">
+                <span class="skill-bar__label">GSAP</span>
+                <div class="skill-bar__track"><div class="skill-bar__fill"></div></div>
+              </div>
+              <div class="skill-bar" data-level="74">
+                <span class="skill-bar__label">Spine (pixi-spine)</span>
+                <div class="skill-bar__track"><div class="skill-bar__fill"></div></div>
+              </div>
+              <div class="skill-bar" data-level="85">
+                <span class="skill-bar__label">Game Logic &amp; State</span>
+                <div class="skill-bar__track"><div class="skill-bar__fill"></div></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel skill-group reveal">
+            <p class="card-label">Concepts</p>
+            <h3>Engineering Priorities</h3>
+            <div class="chip-cloud">
+              <span>Game State Management</span>
+              <span>Performance Optimization</span>
+              <span>Scalable Architecture</span>
+              <span>Modular Components</span>
+              <span>Animation Systems</span>
+            </div>
+          </article>
+
+          <article class="panel skill-group reveal">
+            <p class="card-label">Tools</p>
+            <h3>Daily Development Tools</h3>
+            <div class="skill-bars">
+              <div class="skill-bar" data-level="96">
+                <span class="skill-bar__label">VS Code</span>
+                <div class="skill-bar__track"><div class="skill-bar__fill"></div></div>
+              </div>
+              <div class="skill-bar" data-level="88">
+                <span class="skill-bar__label">Chrome DevTools</span>
+                <div class="skill-bar__track"><div class="skill-bar__fill"></div></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel skill-group reveal">
+            <p class="card-label">AI Tools</p>
+            <h3>AI-Assisted Workflow</h3>
+            <div class="skill-bars">
+              <div class="skill-bar" data-level="92">
+                <span class="skill-bar__label">ChatGPT</span>
+                <div class="skill-bar__track"><div class="skill-bar__fill"></div></div>
+              </div>
+              <div class="skill-bar" data-level="94">
+                <span class="skill-bar__label">Claude (Anthropic)</span>
+                <div class="skill-bar__track"><div class="skill-bar__fill"></div></div>
+              </div>
+              <div class="skill-bar" data-level="78">
+                <span class="skill-bar__label">OpenAI Codex</span>
+                <div class="skill-bar__track"><div class="skill-bar__fill"></div></div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="education">
+      <div class="container">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Education</p>
+          <h2>Academic Background and Languages</h2>
+          <p>
+            Educational background and spoken languages shown here match the details provided in the CV.
+          </p>
+        </div>
+
+        <div class="education-grid">
+          <article class="panel education-card reveal">
+            <p class="card-label">Education</p>
+            <h3>Diploma in Computer Engineering</h3>
+            <p>Ramakrishna Mission Polytechnic College, Chennai</p>
+            <div class="tag-row">
+              <span>2020 – 2023</span>
+              <span class="tag-highlight">84%</span>
+            </div>
+          </article>
+
+          <article class="panel education-card reveal">
+            <p class="card-label">Languages</p>
+            <h3>Spoken Languages</h3>
+            <div class="chip-cloud">
+              <span>Tamil</span>
+              <span>English</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Contact</p>
+          <h2>Contact Information</h2>
+          <p>
+            Based in Chennai, Tamil Nadu, with direct contact details available for game development, frontend development, and web application opportunities.
+          </p>
+        </div>
+
+        <div class="contact-grid">
+          <article class="panel contact-card reveal">
+            <span class="contact-card__label">Phone</span>
+            <a href="tel:6374033673">63740 33673</a>
+          </article>
+
+          <article class="panel contact-card reveal">
+            <span class="contact-card__label">Email</span>
+            <a href="mailto:dineshdine00729@gmail.com">dineshdine00729@gmail.com</a>
+          </article>
+
+          <article class="panel contact-card reveal">
+            <span class="contact-card__label">Location</span>
+            <span>Chennai, Tamil Nadu</span>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <div class="site-footer__meta">
+        <p>Dinesh Kumar S</p>
+        <div class="footer-status" aria-hidden="true">
+          <span class="footer-status__dot"></span>
+          <span>All Systems Online</span>
+        </div>
+        <a
+          class="footer-link"
+          href="./about-site.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open technical overview in a new tab"
+        >
+          Technical Overview
+        </a>
+      </div>
+      <p class="site-footer__summary">Game Developer | Frontend Developer | Web Application Developer | AI-Assisted Development</p>
+    </div>
+  </footer>
+
+  <!-- Toast container -->
+  <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="./assets/vendor/gsap/gsap.min.js?v=3.12.5" defer></script>
+  <script src="./assets/vendor/gsap/ScrollTrigger.min.js?v=3.12.5" defer></script>
+  <script type="module" src="./js/script.js?v=20260425-systemcursor"></script>
+</body>
+</html>

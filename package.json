@@ -1,0 +1,12 @@
+{
+  "name": "web---v3--2",
+  "version": "1.0.0",
+  "description": "A static merged portfolio site with Aurora and Space themes, optimized for GitHub Pages hosting.",
+  "scripts": {
+    "serve": "python -m http.server 4173",
+    "test": "echo \"No automated tests configured. Use npm run serve for local verification.\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
