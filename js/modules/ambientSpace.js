@@ -2,10 +2,10 @@ import { createDisposer } from "./lifecycle.js";
 import { clamp, prefersReducedMotion, rafThrottle, toArray } from "./utils.js";
 
 const HERO_PHRASES = [
-  "casino games · pixijs · gsap · spine",
-  "gameplay interfaces that feel good to play",
-  "responsive ui across mobile, tablet, desktop",
-  "ai-assisted development · faster delivery"
+  "pixijs, gsap, and spine animation pipelines",
+  "slots, table games, and crash game mechanics",
+  "responsive ui for mobile, tablet, and desktop",
+  "ai-assisted development with clean code quality"
 ];
 
 export function createAmbientController() {
@@ -417,4 +417,3 @@ function initHeroParallax(cleanup) {
     if (heroPanel) { heroPanel.style.transform = ""; heroPanel.style.transition = ""; }
   });
 }
-

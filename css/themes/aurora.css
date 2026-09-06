@@ -1929,6 +1929,7 @@ main .section:not(.hero) .section-heading::before::after {
 .contact-card:nth-child(1) { --section-accent: #2563eb; --section-gradient: linear-gradient(135deg, #2563eb, #06b6d4); }
 .contact-card:nth-child(2) { --section-accent: #7c3aed; --section-gradient: linear-gradient(135deg, #7c3aed, #06b6d4); }
 .contact-card:nth-child(3) { --section-accent: #10b981; --section-gradient: linear-gradient(135deg, #10b981, #06b6d4); }
+.contact-card:nth-child(4) { --section-accent: #f59e0b; --section-gradient: linear-gradient(135deg, #f59e0b, #2563eb); }
 
 /* ─── Backdrop-filter fallback — browsers w/o blur support ── */
 

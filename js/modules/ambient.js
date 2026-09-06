@@ -2,10 +2,10 @@ import { createDisposer } from "./lifecycle.js";
 import { clamp, prefersReducedMotion, rafThrottle, toArray } from "./utils.js";
 
 const HERO_PHRASES = [
-  "pixijs · gsap · spine animations",
-  "gameplay interfaces that feel good to play",
-  "responsive ui · mobile · tablet · desktop",
-  "ai-assisted development · faster delivery"
+  "pixijs, gsap, and spine animation pipelines",
+  "slots, table games, and crash game mechanics",
+  "responsive ui for mobile, tablet, and desktop",
+  "ai-assisted development with clean code quality"
 ];
 
 export function createAmbientController() {
